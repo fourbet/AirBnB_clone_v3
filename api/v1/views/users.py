@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-""" Amenities """
+""" Users """
 from api.v1.views import app_views
 import json
 import models
 from flask import jsonify, request
-from models.users import User
+from models.user import User
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
