@@ -87,11 +87,10 @@ def amenity_put(amenity_id):
     content = request.get_json()
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
-    if 'name' in content:
-        objects_amenities = models.storage.all(Amenity)
-        for k, v in objects_amenities.items():
-            if v.id == state_id:
-                v.name = content['name']
-                v.save()
-                return jsonify(v.to_dict()), 200
-        return jsonify(error='Not Found'), 404
+    objects_amenities = models.storage.all(Amenity)
+    for k, v in objects_amenities.items():
+        if v.id == state_id:
+            v.name = content['name']
+            v.save()
+            return jsonify(v.to_dict()), 200
+    return jsonify(error='Not Found'), 404
