@@ -63,7 +63,7 @@ def city_post(state_id):
         header value: {name = value}
         return (JSON)
     """
-    content = request.json
+    content = request.get_json()
     state_not_present = 1
     object_states = models.storage.all(State)
     for k, v in object_states.items():
@@ -88,7 +88,7 @@ def city_put(city_id):
         header value: {name = value}
         return (JSON)
     """
-    content = request.json
+    content = request.get_json()
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
     if 'name' in content:
