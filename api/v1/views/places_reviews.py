@@ -90,7 +90,7 @@ def reviews_post(place_id):
                      place_id=place_id,
                      text=content['text'])
             review.save()
-            return jsonify(review.to_dict()), 200
+            return jsonify(review.to_dict()), 201
 
 
 @app_views.route(
