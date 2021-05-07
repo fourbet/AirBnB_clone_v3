@@ -81,7 +81,7 @@ def state_put(state_id):
     objects_states = models.storage.all(State)
     for k, v in objects_states.items():
         if v.id == state_id:
-            v.to_dict().update(content)
+            v.name = update(content)
             v.save()
             return jsonify(v.to_dict()), 200
     return jsonify(error='Not Found'), 404
