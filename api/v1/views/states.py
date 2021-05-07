@@ -7,7 +7,7 @@ from flask import jsonify, request
 from models.state import State
 
 
-@app_views.route('/states', methods=['GET'])
+@app_views.route('/states', methods=['GET'], strict_slashes=False)
 def states():
     """
         return (JSON)
@@ -20,7 +20,7 @@ def states():
     return jsonify(arr)
 
 
-@app_views.route('/states/<state_id>', methods=['GET'])
+@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def state(state_id):
     """
         return (JSON)
@@ -33,7 +33,10 @@ def state(state_id):
     return jsonify(error='Not found'), 404
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'])
+@app_views.route(
+    '/states/<state_id>',
+    methods=['DELETE'],
+    strict_slashes=False)
 def state_delete(state_id):
     """
         return (JSON)
@@ -48,7 +51,7 @@ def state_delete(state_id):
     return jsonify(error='Not found'), 404
 
 
-@app_views.route('/states', methods=['POST'])
+@app_views.route('/states', methods=['POST'], strict_slashes=False)
 def state_post():
     """
         create a new state
@@ -65,7 +68,7 @@ def state_post():
     return jsonify(error='Missing name'), 400
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'])
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def state_put(state_id):
     """
         update a state
