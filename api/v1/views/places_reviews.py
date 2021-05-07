@@ -80,7 +80,7 @@ def reviews_post(place_id):
             if 'user_id' not in content:
                 return jsonify(error='Missing user_id'), 400
             objects_users = models.storage.all(User)
-            tmp = 'Review.' + content['user_id']
+            tmp = 'User.' + content['user_id']
             if tmp not in objects_users:
                 return jsonify(error='Not found'), 404
             if 'text' not in content:
