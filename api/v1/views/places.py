@@ -57,7 +57,7 @@ def place_delete(place_id):
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
                  strict_slashes=False)
-def city_post(city_id):
+def place_post(city_id):
     """
         create a new place
         header value: {name = value}
