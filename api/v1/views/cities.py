@@ -97,4 +97,4 @@ def city_put(city_id):
             v.name = content['name']
             v.save()
             return jsonify(v.to_dict()), 200
-    return jsonify(error='Not Found'), 404
+    return jsonify(error='Not found'), 404
