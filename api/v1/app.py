@@ -1,11 +1,17 @@
 #!/usr/bin/python3
 """ Create app, blueprint and run app"""
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, jsonify
 from models import storage
 from api.v1.views import app_views
 import os
 app = Flask(__name__)
 app.register_blueprint(app_views)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """ return 404 status code error if page not found """
+    return jsonify(error="Not found"), 404
 
 
 @app.teardown_appcontext
