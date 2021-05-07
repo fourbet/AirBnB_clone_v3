@@ -53,7 +53,7 @@ def place_amenity(place_id, amenity_id):
                 all_amenities = v.amenity_ids
             for each in all_amenities:
                 if each.id == amenity_id:
-                    models.storage.delete(v)
+                    models.storage.delete(each)
                     models.storage.save()
                     return jsonify({}), 200
             return jsonify(error='Not found'), 404
