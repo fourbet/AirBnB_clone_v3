@@ -105,7 +105,35 @@ def place_put(place_id):
     objects_places = models.storage.all(Place)
     for k, v in objects_places.items():
         if v.id == place_id:
-            v.name = content['name']
+            atr = ['user_id', 'city_id', 'user_id', 'created_at', 'updated_at']
+            for ke, val in content.items():
+                if ke not in atr:
+                    setattr(v, ke, val)
+            # v.name = content['name']
             v.save()
             return jsonify(v.to_dict()), 200
     return jsonify(error='Not found'), 404
+
+
+@app_views.route(
+                '/places_search',
+                methods=['POST'],
+                strict_slashes=False)
+def places_post(city_id):
+    """
+        retrieves all Place objects depending
+        of the JSON in the body of the request
+        The JSON can contain 3 optional keys:
+            states: list of State ids
+            cities: list of City ids
+            amenities: list of Amenity ids
+    """
+    content = request.get_json()
+    objects_places = models.storage.all(Place)
+    if request.is_json is False:
+        return jsonify(error='Not a JSON'), 400
+    if len(content) == 0 or all(value == 0 for value in your_dict.values()):
+        places = [place.to_dict for k, place in objects_places.items()]
+        return jsonify(places), 200
+    if 'states' in content and len(content['states']) > 0:
+        places = [place.to_dict for k, place in objects_places.items()]
