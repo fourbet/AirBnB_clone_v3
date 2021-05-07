@@ -72,9 +72,9 @@ def place_amenity_post(place_id, amenity_id):
     objects_places = models.storage.all(Place)
     for k, v in objects_places.items():
         if v.id == place_id:
-            all_amenities = models.storage.all(Amenity)
+            amenities = models.storage.all(Amenity)
             tmp = 'Amenity.' + amenity_id
-            if tmp not in all_amenities:
+            if tmp not in amenities:
                 return jsonify(error='Not found'), 404
             if os.getenv('HBNB_TYPE_STORAGE') == "db":
                 all_amenities = v.amenities
@@ -83,15 +83,15 @@ def place_amenity_post(place_id, amenity_id):
             # case of amenity is already linked
             for each in all_amenities:
                 if each.id == amenity_id:
-                    return jsonify(each.to_dict), 200
+                    return jsonify(amenities[tmp].to_dict()), 200
             # case amenity not linked
             if os.getenv('HBNB_TYPE_STORAGE') == "db":
-                v.amenities.append(all_amenities[tmp])
+                v.amenities.append(amenities[tmp])
                 v.save()
-                return jsonify(all_amenities[tmp].to_dict()), 201
+                return jsonify(amenities[tmp].to_dict()), 201
             else:
-                v.amenity_ids.append(all_amenities[tmp])
+                v.amenity_ids.append(amenities[tmp])
                 v.save()
-                return jsonify(all_amenities[tmp].to_dict()), 201
+                return jsonify(amenities[tmp].to_dict()), 201
             return jsonify(error='Not found'), 404
     return jsonify(error='Not found'), 404
