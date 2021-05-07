@@ -80,9 +80,11 @@ def place_amenity_post(place_id, amenity_id):
                 all_amenities = v.amenities
             else:
                 all_amenities = v.amenity_ids
+            # case of amenity is already linked
             for each in all_amenities:
                 if each.id == amenity_id:
                     return jsonify(each.to_dict), 200
+            # case amenity not linked
             if os.getenv('HBNB_TYPE_STORAGE') == "db":
                 v.amenities.append(all_amenities[tmp])
                 v.save()
