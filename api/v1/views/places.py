@@ -6,6 +6,7 @@ import models
 from flask import jsonify, request
 from models.city import City
 from models.place import Place
+from models.user import User
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -65,8 +66,8 @@ def place_post(city_id):
     """
     content = request.get_json()
     city_not_present = 1
-    object_places = models.storage.all(Place)
-    for k, v in object_places.items():
+    object_cities = models.storage.all(City)
+    for k, v in object_cities.items():
         if v.id == city_id:
             city_not_present = 0
     if city_not_present:
