@@ -7,7 +7,7 @@ from flask import jsonify, request
 from models.amenity import Amenity
 
 
-@app_views.route('/amenities', methods=['GET'])
+@app_views.route('/amenities', methods=['GET'], strict_slashes=False)
 def amenities():
     """
         return (JSON)
@@ -20,7 +20,10 @@ def amenities():
     return jsonify(arr)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['GET'])
+@app_views.route(
+    '/amenities/<amenity_id>',
+    methods=['GET'],
+    strict_slashes=False)
 def amenity(amenity_id):
     """
         return (JSON)
@@ -33,7 +36,10 @@ def amenity(amenity_id):
     return jsonify(error='Not found'), 404
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['DELETE'])
+@app_views.route(
+    '/amenities/<amenity_id>',
+    methods=['DELETE'],
+    strict_slashes=False)
 def amenity_delete(amenity_id):
     """
         return (JSON)
@@ -48,14 +54,17 @@ def amenity_delete(amenity_id):
     return jsonify(error='Not found'), 404
 
 
-@app_views.route('/amenities', methods=['POST'])
+@app_views.route(
+    '/amenities',
+    methods=['POST'],
+    strict_slashes=False)
 def amenity_post():
     """
         create a new amenity
         header value: {name = value}
         return (JSON)
     """
-    content = request.json
+    content = request.get_json()
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
     if 'name' in content:
@@ -65,21 +74,23 @@ def amenity_post():
     return jsonify(error='Missing name'), 400
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'])
+@app_views.route(
+    '/amenities/<amenity_id>',
+    methods=['PUT'],
+    strict_slashes=False)
 def amenity_put(amenity_id):
     """
         update a state
         header value: {name = value}
         return (JSON)
     """
-    content = request.json
+    content = request.get_json()
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
-    if 'name' in content:
-        objects_amenities = models.storage.all(Amenity)
-        for k, v in objects_amenities.items():
-            if v.id == amenity_id:
-                v.name = content['name']
-                v.save()
-                return jsonify(v.to_dict()), 201
-    return jsonify(error='Missing name'), 400
+    objects_amenities = models.storage.all(Amenity)
+    for k, v in objects_amenities.items():
+        if v.id == state_id:
+            v.name = content['name']
+            v.save()
+            return jsonify(v.to_dict()), 200
+    return jsonify(error='Not Found'), 404
