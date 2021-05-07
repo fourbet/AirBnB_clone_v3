@@ -91,11 +91,10 @@ def city_put(city_id):
     content = request.get_json()
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
-    if 'name' in content:
-        objects_cities = models.storage.all(City)
-        for k, v in objects_cities.items():
-            if v.id == city_id:
-                v.name = content['name']
-                v.save()
-                return jsonify(v.to_dict()), 200
-    return jsonify(error='Missing name'), 400
+    objects_cities = models.storage.all(City)
+    for k, v in objects_cities.items():
+        if v.id == city_id:
+            v.name = content['name']
+            v.save()
+            return jsonify(v.to_dict()), 200
+    return jsonify(error='Not Found'), 404
