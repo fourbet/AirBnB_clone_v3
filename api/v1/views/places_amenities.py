@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Amenities """
+""" Place Amenities """
 from api.v1.views import app_views
 import json
 import models
@@ -15,7 +15,7 @@ import os
     '/places/<place_id>/amenities',
     methods=['GET'],
     strict_slashes=False)
-def amenities(place_id):
+def place_amenities(place_id):
     """
         return (JSON)
         array of all amenities to a place
@@ -35,7 +35,7 @@ def amenities(place_id):
     '/places/<place_id>/amenities/<amenity_id>',
     methods=['DELETE'],
     strict_slashes=False)
-def amenity(place_id, amenity_id):
+def place_amenity(place_id, amenity_id):
     """
         return (JSON)
         delete amenity from a place
@@ -64,7 +64,7 @@ def amenity(place_id, amenity_id):
     '/places/<place_id>/amenities/<amenity_id>',
     methods=['POST'],
     strict_slashes=False)
-def amenity_post(place_id, amenity_id):
+def place_amenity_post(place_id, amenity_id):
     """
         link an amenity to a place
         return (JSON)
