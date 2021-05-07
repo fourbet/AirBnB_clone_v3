@@ -84,5 +84,5 @@ def state_put(state_id):
             if v.id == state_id:
                 v.name = content['name']
                 v.save()
-                return jsonify(v.to_dict()), 201
+                return jsonify(v.to_dict()), 200
     return jsonify(error='Missing name'), 400
