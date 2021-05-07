@@ -82,7 +82,8 @@ def state_put(state_id):
     if 'name' in content:
         for k, v in objects_states.items():
             if v.id == state_id:
-                v.name = content['name']
+                v.to_dict().update(content)
                 v.save()
                 return jsonify(v.to_dict()), 200
+        return jsonify(error='Not Found'), 404
     return jsonify(error='Missing name'), 400
