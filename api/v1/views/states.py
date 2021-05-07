@@ -79,11 +79,9 @@ def state_put(state_id):
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
     objects_states = models.storage.all(State)
-    if 'name' in content:
-        for k, v in objects_states.items():
-            if v.id == state_id:
-                v.to_dict().update(content)
-                v.save()
-                return jsonify(v.to_dict()), 200
-        return jsonify(error='Not Found'), 404
-    return jsonify(error='Missing name'), 400
+    for k, v in objects_states.items():
+        if v.id == state_id:
+            v.to_dict().update(content)
+            v.save()
+            return jsonify(v.to_dict()), 200
+    return jsonify(error='Not Found'), 404
