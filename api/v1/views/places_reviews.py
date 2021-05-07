@@ -91,6 +91,7 @@ def reviews_post(place_id):
                      text=content['text'])
             review.save()
             return jsonify(review.to_dict()), 201
+    return jsonify(error='Not found'), 404
 
 
 @app_views.route(
