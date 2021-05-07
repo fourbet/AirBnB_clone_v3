@@ -87,7 +87,7 @@ def reviews_post(place_id):
                 return jsonify(error='Missing text'), 400
             review = Review(
                      user_id=content['user_id'],
-                     place_id=content['place_id'],
+                     place_id=place_id,
                      text=content['text'])
             review.save()
             return jsonify(review.to_dict()), 200
