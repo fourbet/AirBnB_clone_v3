@@ -94,7 +94,11 @@ def city_put(city_id):
     objects_cities = models.storage.all(City)
     for k, v in objects_cities.items():
         if v.id == city_id:
-            v.name = content['name']
+            atr = ['state_id', 'id', 'created_at', 'updated_at']
+            for ke, val in content.items():
+                if ke not in atr:
+                    setattr(v, ke, val)
+            # v.name = content['name']
             v.save()
             return jsonify(v.to_dict()), 200
     return jsonify(error='Not found'), 404
