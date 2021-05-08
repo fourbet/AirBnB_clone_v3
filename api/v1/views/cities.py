@@ -15,14 +15,11 @@ def states_city(state_id):
         return (JSON)
         array of all City objects of a State
     """
-    arr = []
-    objects_cities = models.storage.all(City)
-    for k, v in objects_cities.items():
-        if v.state_id == state_id:
-            arr.append(v.to_dict())
-    if arr == []:
-        return jsonify(error='Not found'), 404
-    return jsonify(arr)
+    objects_states = models.storage.all(State)
+    for k, v in objects_states.items():
+        if v.id == state_id:
+            return jsonify([city.to_dict() for city in v.cities])
+    return jsonify(error='Not found'), 404
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'],
