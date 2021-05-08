@@ -48,8 +48,8 @@ def users_delete(user_id):
     objects_users = models.storage.all(User)
     for k, v in objects_users.items():
         if v.id == user_id:
-            v.delete()
-            v.save()
+            models.storage.delete(v)
+            models.storage.save()
             return jsonify({}), 200
     return jsonify(error='Not found'), 404
 
