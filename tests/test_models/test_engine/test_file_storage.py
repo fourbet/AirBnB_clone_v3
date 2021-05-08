@@ -95,6 +95,53 @@ class TestFileStorage(unittest.TestCase):
         FileStorage._FileStorage__objects = save
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get_method_user(self):
+        """test that get() retrieve one object"""
+        user = User(email="Thibaut@", password="dzdz")
+        user.save()
+        storage = FileStorage()
+        user_get = storage.get(User, user.id)
+        self.assertEqual(user_get.id, user.id)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get_method_None(self):
+        """test that get() retrieve None"""
+        user = User(email="Thibaut@", password="dzdz")
+        user.save()
+        storage = FileStorage()
+        user_get = storage.get(User, "dzdizji")
+        self.assertEqual(user_get, None)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_method_user(self):
+        """test that count() return correct number of objects of users"""
+        storage = FileStorage()
+        user = User(email="Thibaut@", password="dzdz")
+        tmp = "User." + user.id
+        d = {}
+        d[tmp] = user
+        FileStorage._FileStorage__objects = d
+        storage.save()
+        number_of_users = storage.count(User)
+        self.assertEqual(number_of_users, 1)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_method(self):
+        """test that count() return correct number of objects of all"""
+        storage = FileStorage()
+        user = User(email="Thibaut@", password="dzdz")
+        user1 = User(email="Thibdaut@", password="ddzdz")
+        state = State(name="calif")
+        d = {}
+        d["User." + user.id] = user
+        d["User." + user1.id] = user1
+        d["State." + state.id] = state
+        FileStorage._FileStorage__objects = d
+        storage.save()
+        number_of_objects = storage.count()
+        self.assertEqual(number_of_objects, 3)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
         storage = FileStorage()
