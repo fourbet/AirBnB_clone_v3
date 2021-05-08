@@ -96,7 +96,10 @@ def users_put(user_id):
     objects_users = models.storage.all(User)
     for k, v in objects_users.items():
         if v.id == user_id:
-            v.password = content['password']
+            atr = ['user_id', 'id', 'city_id', 'created_at', 'updated_at']
+            for ke, val in content.items():
+                if ke not in atr:
+                    setattr(v, ke, val)
             v.save()
             return jsonify(v.to_dict()), 200
     return jsonify(error='Not Found'), 404
