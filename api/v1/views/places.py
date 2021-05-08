@@ -16,14 +16,11 @@ def places(city_id):
         return (JSON)
         array of all Places objects of a City
     """
-    arr = []
-    objects_places = models.storage.all(Place)
-    for k, v in objects_places.items():
-        if v.city_id == city_id:
-            arr.append(v.to_dict())
-    if arr == []:
-        return jsonify(error='Not found'), 404
-    return jsonify(arr)
+    objects_cities = models.storage.all(City)
+    for k, v in objects_cities.items():
+        if v.id == city_id:
+            return jsonify([place.to_dict() for place in v.places])
+    return jsonify(error='Not found'), 404
 
 
 @app_views.route('/places/<place_id>', methods=['GET'],
