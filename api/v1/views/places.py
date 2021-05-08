@@ -156,8 +156,13 @@ def places_post():
         return jsonify([place.to_dict() for place in places])
 
     # only amenities
-    if 'amenities' in content and len(content['amenities']) > 0\
-       and len(content) == 1:
+    if ('amenities' in content and len(content['amenities']) > 0 and
+        len(content) == 1) or ('amenities' in content and
+                               'cities' in content and
+                               'states' in content and
+                               content['cities'] == [] and
+                               content['states'] == [] and
+                               len(content['amenities']) > 0):
         places = []
         for k, v in objects_places.items():
             count = 0
