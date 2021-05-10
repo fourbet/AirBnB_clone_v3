@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" States """
+"""
+    States
+    ---
+"""
 from api.v1.views import app_views
 import json
 import models
@@ -10,8 +13,15 @@ from models.state import State
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def states():
     """
-        return (JSON)
-        array of all dict of all objects
+    List of all States
+    ---
+    responses:
+      200:
+        description: A list of colors (may be filtered by palette)
+        schema:
+          $ref: '#/definitions/Palette'
+        examples:
+          rgb: ['red', 'green', 'blue']
     """
     arr = []
     objects_states = models.storage.all(State)
@@ -23,8 +33,13 @@ def states():
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def state(state_id):
     """
-        return (JSON)
-        dict of the object from the state_id
+    Dict of the object from the state_id
+    ---
+    responses:
+        200:
+             description: ddzz
+        404:
+             description: dzdz
     """
     objects_states = models.storage.all(State)
     for k, v in objects_states.items():
