@@ -3,10 +3,12 @@
 Contains the TestDBStorageDocs and TestDBStorage classes
 """
 
+import MySQLdb
 from datetime import datetime
 import inspect
 import models
 from models.engine import db_storage
+from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
@@ -14,6 +16,8 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from os import getenv
+from models.state import State
 import json
 import os
 import pep8
@@ -75,6 +79,19 @@ class TestFileStorage(unittest.TestCase):
         """Test that all returns a dictionaty"""
         self.assertIs(type(models.storage.all()), dict)
 
+    def setUp(self):
+        """ Set Up """
+        self.conn = MySQLdb.connect(getenv("HBNB_MYSQL_HOST"),
+                                    getenv("HBNB_MYSQL_USER"),
+                                    getenv("HBNB_MYSQL_PWD"),
+                                    getenv("HBNB_MYSQL_DB"))
+        self.cur = self.conn.cursor()
+
+    def tearDown(self):
+        """ Tear Down """
+        self.cur.close()
+        self.conn.close()
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_no_class(self):
         """Test that all returns all rows when no class is passed"""
@@ -88,9 +105,28 @@ class TestFileStorage(unittest.TestCase):
         """Test that save properly saves objects to file.json"""
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_get(self):
-        """Test that get return correctlyn"""
+    def test_count_state(self):
+        """Test that count return correctly number of State"""
+        newState = State(name="Annecy")
+        newState.save()
+        counter = storage.count(State)
+        nb = self.cur.execute("SELECT * FROM states")
+        self.assertEqual(counter, nb)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_count(self):
-        """Test that count return correct number of objects"""
+    def test_count_obj(self):
+        """Test that count return correctly number of objects"""
+        newState = State(name="Annecy")
+        newState2 = State(name="London")
+        counter = storage.count()
+        nb = self.cur.execute("SELECT * FROM states")
+        self.assertEqual(counter, nb)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """Test that get return correctly"""
+        newState = State(name="Lyon")
+        newState.save()
+        state_id = newState.id
+        state = storage.get('State', state_id)
+        self.assertEqual(state_id, state.id)

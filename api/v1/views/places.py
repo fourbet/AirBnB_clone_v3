@@ -7,6 +7,7 @@ from flask import jsonify, request
 from models.city import City
 from models.place import Place
 from models.user import User
+from models.state import State
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -116,7 +117,7 @@ def place_put(place_id):
                 '/places_search',
                 methods=['POST'],
                 strict_slashes=False)
-def places_post(city_id):
+def places_post():
     """
         retrieves all Place objects depending
         of the JSON in the body of the request
@@ -129,8 +130,75 @@ def places_post(city_id):
     objects_places = models.storage.all(Place)
     if request.is_json is False:
         return jsonify(error='Not a JSON'), 400
-    if len(content) == 0 or all(value == 0 for value in your_dict.values()):
-        places = [place.to_dict for k, place in objects_places.items()]
+    if len(content) == 0 or all(value == 0 for value in content.values()):
+        places = [place.to_dict() for k, place in objects_places.items()]
         return jsonify(places), 200
-    if 'states' in content and len(content['states']) > 0:
-        places = [place.to_dict for k, place in objects_places.items()]
+
+    # only states in JSON
+    if 'states' in content and len(content['states']) > 0\
+       and len(content) == 1:
+        # states: [state_id, ....]
+        places = []
+        for state_id in content['states']:
+            state = models.storage.get(State, state_id)
+            cities = state.cities
+            for city in cities:
+                places += city.places
+        return jsonify([place.to_dict() for place in places])
+
+    # only cities
+    if 'cities' in content and len(content['cities']) > 0\
+       and len(content) == 1:
+        places = []
+        for city_id in content['cities']:
+            city = models.storage.get(City, city_id)
+            places += city.places
+        return jsonify([place.to_dict() for place in places])
+
+    # only amenities
+    if ('amenities' in content and len(content['amenities']) > 0 and
+        len(content) == 1) or ('amenities' in content and
+                               'cities' in content and
+                               'states' in content and
+                               content['cities'] == [] and
+                               content['states'] == [] and
+                               len(content['amenities']) > 0):
+        places = []
+        for k, v in objects_places.items():
+            count = 0
+            for amenity in v.amenities:
+                for amenity_id in content['amenities']:
+                    if amenity.id == amenity_id:
+                        count += 1
+            if count == len(content['amenities']):
+                places.append(v)
+        return jsonify([place.to_dict() for place in places])
+
+    # cities and states in JSON
+    if 'cities' in content and 'states' in content and\
+       len(content['states']) > 0 and len(content['cities']) > 0:
+        places = []
+        for state_id in content['states']:
+            state = models.storage.get(State, state_id)
+            cities = state.cities
+            for city in cities:
+                places += city.places
+        for city_id in content['cities']:
+            city = models.storage.get(City, city_id)
+            not_in_place = 0
+            for place in places:
+                if place.city_id == city.id:
+                    not_in_place = 1
+            if not_in_place == 0:
+                places += city.places
+        # + amenities filter
+        if 'amenities' in content:
+            for place in places:
+                count = 0
+                for amenity in place.amenities:
+                    for amenity_id in content['amenities']:
+                        if amenity.id == amenity_id:
+                            count += 1
+                if count != len(content['amenities']):
+                    places.remove(place)
+        return jsonify([place.to_dict() for place in places])
